@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Test.Application;
+using Test.Domain;
 
 namespace TechnicalTest
 {
@@ -26,6 +28,8 @@ namespace TechnicalTest
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.RegisterDBContext(Configuration);
+            services.RegisterTechinalTestComponent();
             services.AddControllers();
             services.AddMvc();
             services.AddSwaggerGen(c =>

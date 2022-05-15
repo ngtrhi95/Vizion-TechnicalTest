@@ -7,7 +7,7 @@ namespace Test.Application
 {
     public static class RegisterComponent
     {
-        public static void RegisterBookingComponent(this IServiceCollection services)
+        public static void RegisterTechinalTestComponent(this IServiceCollection services)
         {
             services.AddTransient<ITechnicalTestService, TechnicalTestService>();
         }
