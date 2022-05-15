@@ -84,7 +84,6 @@ namespace Test.Application.Implementations
                 string downloadUrl = string.Format("{0}/{1}/{2}/{3}", _blobStorageSetting.BaseStorageUrl, _blobStorageSetting.ContainerName, newTest.Id, newTestViewModel.File.FileName);
                 newTest.DownloadUrl = downloadUrl;
                 await _technicalTestCollection.ReplaceOneAsync(x => x.Id == newTest.Id, newTest);
-
             }
         }
 
@@ -113,16 +112,19 @@ namespace Test.Application.Implementations
 
         private async Task DeleteFileToBlobStorageAsync(TechnicalTest technicalTest)
         {
-            string fileName = technicalTest.DownloadUrl.Substring(technicalTest.DownloadUrl.LastIndexOf('/'));
-            // intialize BobClient 
-            BlobClient blobClient = new BlobClient(
-                connectionString: _blobStorageSetting.ConnectionString,
-                blobContainerName: _blobStorageSetting.ContainerName,
-                blobName: string.Format("{0}/{1}", technicalTest.Id, fileName)
-            );
+            if (!string.IsNullOrEmpty(technicalTest.DownloadUrl))
+            {
+                string fileName = technicalTest.DownloadUrl.Substring(technicalTest.DownloadUrl.LastIndexOf('/'));
+                // intialize BobClient 
+                BlobClient blobClient = new BlobClient(
+                    connectionString: _blobStorageSetting.ConnectionString,
+                    blobContainerName: _blobStorageSetting.ContainerName,
+                    blobName: string.Format("{0}/{1}", technicalTest.Id, fileName)
+                );
 
-            // delete file
-            await blobClient.DeleteIfExistsAsync();
+                // delete file
+                await blobClient.DeleteIfExistsAsync();
+            }
         }
 
         private async Task<Tuple<string, string>> CopyFileToTempFolderAsync(IFormFile file, string id)
